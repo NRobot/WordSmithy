@@ -1,76 +1,107 @@
 package com.natecode;
 
-import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.*;
 
 // This class will take a string and will parse it to check for problems, remove spaces, and identify features
 public class WordParser {
     private String word;
-    private String newWord;
-    private int minWordLength = 3;
-    private int maxWordLength = 25;
+    // private String newWord;
+    private String firstSyllable;
     int wordLength;
 
-    private static Scanner scanner = new Scanner(System.in);
+    List<Object> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
+    List<Object> acceptedChars = Arrays.asList(' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+
+    private static final Scanner scanner = new Scanner(System.in);
 
     public WordParser() {
         word = this.getWord();
         System.out.println("The word: " + word);
     }
 
-    // The initial method that will check to make sure the string is acceptable
-    public String getWord() {
-
+    // Receives string and checks if it is acceptable
+    private String getWord() {
+        // Receives input from user
         while (true) {
             System.out.println("Please enter a word:");
-            word = scanner.nextLine();
+            word = scanner.nextLine().toLowerCase();
             wordLength = word.length();
 
-            firstIf:
-            if (word.length() >= minWordLength && word.length() <= maxWordLength) {
-                if(checkVowels(word) == true)
-                break;
-            }
-            else
-            System.out.println("Please pick a word between " + minWordLength +
-                    " and " + maxWordLength + " characters in length");
+            // Checks for acceptable word length
+            int maxWordLength = 25;
+            int minWordLength = 3;
+            if(checkLength(word, minWordLength, maxWordLength)) {
+                // Checks for allowed characters
+                if(checkCharacters(word))
+                    // Checks to make sure there are vowels
+                    if (checkVowels(word))
+                    break;
+                ;
+            };
         }
         return word;
     }
 
-    public boolean checkVowels(String word) {
-        String vowels = "aeiou";
-        boolean vowelFound = false;
+    private boolean checkLength (String word, int minLength, int maxLength) {
+        boolean correctLength = false;
 
-        outerloop:
+        if (wordLength >= minLength && wordLength <= maxLength)
+            correctLength = true;
+        else {
+            System.out.println("Please pick a word between " + minLength +
+                    " and " + maxLength + " characters in length...");
+        }
+        return correctLength;
+    }
+
+    private boolean checkCharacters (String word) {
+        boolean correctCharacters = false;
+
         for (int i = 0; i < wordLength; i++) {
-            for (int j = 0; j < vowels.length(); j++) {
-                if (word.charAt(i) == vowels.charAt(j)) {
-                    vowelFound = true;
-                    break outerloop;
-                }
+            if (acceptedChars.contains(word.charAt(i)))
+                correctCharacters = true;
+            else {
+                correctCharacters = false;
+                break;
             }
         }
-        if (vowelFound == false)
-            System.out.println("Looks like you don't have any vowels.");
+
+        if (!correctCharacters)
+            System.out.println("Please only use a-z and spaces...");
+
+        return correctCharacters;
+    }
+
+    private boolean checkVowels (String word) {
+        boolean vowelFound = false;
+
+        for (int i = 0; i < wordLength; i++) {
+            if (vowels.contains(word.charAt(i))) {
+                vowelFound = true;
+                break;
+            }
+        }
+
+        if (!vowelFound)
+            System.out.println("Looks like you don't have any vowels...");
+
         return vowelFound;
     }
 
-    public boolean checkNumbers(String word) {
-        String numbers = "0123456789";
-        boolean numberFound = false;
+    private void findSyllables(String word) {
+        StringBuilder syllable = new StringBuilder();
 
-        outerloop:
         for (int i = 0; i < wordLength; i++) {
-            for (int j = 0; j < numbers.length(); j++) {
-                if (word.charAt(i) == numbers.charAt(j)) {
-                    numberFound = true;
-                    break outerloop;
-                }
+            if (vowels.contains(word.charAt(i))) {
+                syllable.append(word.charAt(i));
+                break;
             }
+			else if  (i != (wordLength - 1) && !vowels.contains(word.charAt(i+1)))
+                break;
         }
-        if (numberFound == true)
-            System.out.println("Please don't include any numbers.");
-        return numberFound;
-    }
 
+        System.out.println("First syllable is \"" + syllable + "\".");
+    }
 }
