@@ -2,15 +2,14 @@ package com.natecode;
 
 import java.util.*;
 
-// This class will take a string and will parse it to check for problems, remove spaces, and identify features
+// This class will take a string and will parse it to check for problems.
 public class WordParser {
     private String word;
     // private String newWord;
     private int wordLength;
     private String wordEnding;
-    private List<String> syllables = new ArrayList<String>();
 
-    List<Object> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
+    List<Object> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u', 'y');
     List<Object> acceptedChars = Arrays.asList(' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
             'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
     List<Object> endConsonantList = Arrays.asList('b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n',
@@ -21,7 +20,7 @@ public class WordParser {
 
     public WordParser() {
         word = this.getWord();
-        printResults(syllables);
+        ProcessWord processNewWord = new ProcessWord(word);
     }
 
     // Receives string and checks if it is acceptable
@@ -40,7 +39,6 @@ public class WordParser {
                 if(checkCharacters(word))
                     // Checks to make sure there are vowels
                     if (checkVowels(word)) {
-                        findSyllables(word);
                         break;
                     }
                 ;
@@ -93,43 +91,5 @@ public class WordParser {
             System.out.println("Looks like you don't have any vowels...");
 
         return vowelFound;
-    }
-
-    private void findSyllables(String word) {
-        int syllableCount = 0;
-        String newSyllable;
-        StringBuilder syllableString = new StringBuilder();
-
-        for (int i = 0; i < wordLength; i++) {
-            if (vowels.contains(word.charAt(i))) {
-                syllableString.append(word.charAt(i));
-                if (i != 0 && !vowels.contains(word.charAt(i-1)))
-                syllableCount++;
-
-                if  (i != (wordLength - 1) && !vowels.contains(word.charAt(i+1))) {
-                    newSyllable = syllableString.toString();
-                    syllables.add((syllableCount - 1), newSyllable);
-                    syllableString.setLength(0);
-                }
-                if  (i == (wordLength - 1)) {
-                    newSyllable = syllableString.toString();
-                    syllables.add((syllableCount - 1), newSyllable);
-                    syllableString.setLength(0);
-                }
-            }
-        }
-    }
-
-    private void printResults(List listOfSyllables) {
-        int counter = 0;
-        int numberOfSyllables = listOfSyllables.size();
-        System.out.println("The word: " + word);
-        System.out.println("Number of syllables: " + numberOfSyllables);
-        if(listOfSyllables !=null) {
-            for(Object syllablePrinted : listOfSyllables) {
-                counter++;
-                System.out.println("Syllable " + counter + ": " + syllablePrinted);
-            }
-        }
     }
 }
