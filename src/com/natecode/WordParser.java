@@ -7,11 +7,15 @@ public class WordParser {
     private String word;
     // private String newWord;
     private int wordLength;
+    private String wordEnding;
     private List<String> syllables = new ArrayList<String>();
 
     List<Object> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
     List<Object> acceptedChars = Arrays.asList(' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
             'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+    List<Object> endConsonantList = Arrays.asList('b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n',
+            'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z');
+    List<Object> wordEndingList = Arrays.asList("le", "el", "ing", "ly", "al", "ful", "less", "ive", "ous");
 
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -103,6 +107,11 @@ public class WordParser {
                 syllableCount++;
 
                 if  (i != (wordLength - 1) && !vowels.contains(word.charAt(i+1))) {
+                    newSyllable = syllableString.toString();
+                    syllables.add((syllableCount - 1), newSyllable);
+                    syllableString.setLength(0);
+                }
+                if  (i == (wordLength - 1)) {
                     newSyllable = syllableString.toString();
                     syllables.add((syllableCount - 1), newSyllable);
                     syllableString.setLength(0);
