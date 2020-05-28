@@ -1,4 +1,4 @@
-package com.natecode;
+package com.naterobot;
 
 public class Main {
 
